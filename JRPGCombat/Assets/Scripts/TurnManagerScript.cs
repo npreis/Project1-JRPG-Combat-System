@@ -51,6 +51,7 @@ public class TurnManagerScript : MonoBehaviour
     int fireTurn = 0;
     int iceTurn = 0;
     int elecTurn = 0;
+    int stunTurn = 0;
 
     int hpMultiplier = 1;
     int mpMultiplier = 1;
@@ -333,6 +334,13 @@ public class TurnManagerScript : MonoBehaviour
             yield return new WaitForSeconds(2f);
             state = BattleState.PLAYERTURN;
         }
+        if(stunTurn > 0)
+        {
+            dialogue.text = "The enemy is recovering";
+            stunTurn--;
+            yield return new WaitForSeconds(2f);
+            state = BattleState.PLAYERTURN;
+        }
 
         if(isDead)
         {
@@ -343,7 +351,14 @@ public class TurnManagerScript : MonoBehaviour
         {
             if(state == BattleState.ENEMYTURN)
             {
-                StartCoroutine(EnemyTurn());
+                if(enemyCharacter.currHealth < enemyCharacter.maxHealth / 2 && !isPhaseTwo && battleType == BattleType.Final_Boss)
+                {
+                    StartCoroutine(BeginPhase2());
+                }
+                else
+                {
+                    StartCoroutine(EnemyTurn());
+                }
             }
             else
             {
@@ -449,6 +464,38 @@ public class TurnManagerScript : MonoBehaviour
             }
         }
 
+        else if(turnAction >= 91 && isPhaseTwo)
+        {
+            int damage = Random.Range(250, 400);
+            int manaCost = 150;
+            bool isDead = false;
+
+            if(enemyCharacter.currMana >= manaCost)
+            {
+                dialogue.text = "The enemy used World Breaker.";
+                yield return new WaitForSeconds(2.0f);
+
+                isDead = playerCharacter.TakeDamage(damage);
+
+                playerHUD.SetHP(playerCharacter.currHealth);
+                stunTurn = 2;
+
+                dialogue.text = "You have taken " + damage + " damage.";
+                yield return new WaitForSeconds(2.0f);
+
+                if (isDead)
+                {
+                    state = BattleState.LOSE;
+                    EndBattle();
+                }
+                else
+                {
+                    state = BattleState.PLAYERTURN;
+                    PlayerTurn();
+                }
+            }
+        }
+
         else
         {
             dialogue.text = "The enemy is attacking";
@@ -509,7 +556,32 @@ public class TurnManagerScript : MonoBehaviour
 
     IEnumerator BeginPhase2()
     {
+        isPhaseTwo = true;
+
         dialogue.text = "...Welcome to Hell.";
+        yield return new WaitForSeconds(3.0f);
+
+        dialogue.text = "Enemy used World Breaker";
         yield return new WaitForSeconds(2.0f);
+
+        int damage = Random.Range(700, 1000);
+        bool isDead = playerCharacter.TakeDamage(damage);
+
+        playerHUD.SetHP(playerCharacter.currHealth);
+        stunTurn = 2;
+
+        dialogue.text = "You have taken " + damage + " damage.";
+        yield return new WaitForSeconds(2.0f);
+
+        if(isDead)
+        {
+            state = BattleState.LOSE;
+            EndBattle();
+        }
+        else
+        {
+            state = BattleState.PLAYERTURN;
+            PlayerTurn();
+        }
     }
 }

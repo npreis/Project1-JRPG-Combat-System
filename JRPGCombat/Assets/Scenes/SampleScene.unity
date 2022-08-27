@@ -2035,7 +2035,7 @@ MonoBehaviour:
   playerHUD: {fileID: 53799748}
   enemyHUD: {fileID: 1250782729}
   dialogue: {fileID: 233716712}
-  battleType: 2
+  battleType: 3
 --- !u!4 &733438544
 Transform:
   m_ObjectHideFlags: 0
