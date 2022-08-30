@@ -2926,7 +2926,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 733438543}
         m_TargetAssemblyTypeName: TurnManagerScript, Assembly-CSharp
-        m_MethodName: OnHealButton
+        m_MethodName: OnEscapeButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4156,6 +4156,7 @@ GameObject:
   - component: {fileID: 1897205409}
   - component: {fileID: 1897205408}
   - component: {fileID: 1897205407}
+  - component: {fileID: 1897205410}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -4211,6 +4212,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1897205410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1897205406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f0f5cf41d356794b83a08a698f7a49e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2026148996
 GameObject:
   m_ObjectHideFlags: 0

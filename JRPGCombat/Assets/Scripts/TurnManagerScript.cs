@@ -9,7 +9,8 @@ public enum BattleState
     PLAYERTURN,
     ENEMYTURN,
     WIN,
-    LOSE
+    LOSE,
+    ESCAPE
 }
 
 public enum BattleType
@@ -155,6 +156,17 @@ public class TurnManagerScript : MonoBehaviour
         }
 
         StartCoroutine(MagicAttack(magicNum));
+    }
+
+    public void OnEscapeButton()
+    {
+        if(state != BattleState.PLAYERTURN)
+        {
+            return;
+        }
+
+        state = BattleState.ESCAPE;
+        StartCoroutine(EndBattle());
     }
 
     public IEnumerator MagicAttack(int magicNum)
@@ -478,7 +490,7 @@ public class TurnManagerScript : MonoBehaviour
                 isDead = playerCharacter.TakeDamage(damage);
 
                 playerHUD.SetHP(playerCharacter.currHealth);
-                stunTurn = 2;
+                stunTurn = 1;
 
                 dialogue.text = "You have taken " + damage + " damage.";
                 yield return new WaitForSeconds(2.0f);
@@ -542,7 +554,7 @@ public class TurnManagerScript : MonoBehaviour
         }
     }
 
-    void EndBattle()
+    IEnumerator EndBattle()
     {
         if(state == BattleState.WIN)
         {
@@ -552,6 +564,13 @@ public class TurnManagerScript : MonoBehaviour
         {
             dialogue.text = "You have fallen in battle.";
         }
+        else if(state == BattleState.ESCAPE)
+        {
+            dialogue.text = "You have successfully escaped.";
+        }
+
+        yield return new WaitForSeconds(2.0f);
+        dialogue.text = "Press R to reset battle.";
     }
 
     IEnumerator BeginPhase2()
